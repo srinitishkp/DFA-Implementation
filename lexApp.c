@@ -58,58 +58,74 @@ int main()
       }
   }
   dash();
-  printf("\nTransistion Table:\nState\t");
-  for(i=0;i<noOfSym;i++)
-    printf("%c\t",symbols[i]);
-  for(i=0;i<noOfStates;i++)
-  {
-    printf("\n");
-    if(i==initialState)
-      printf("-->");
-    if(accState(accStates,i,noOfAcc))
-      printf("*");
-    printf("q%d\t",i);
-    for(j=0;j<noOfSym;j++)
-    {
-      printf("q%d\t",trans_tab[i][j]);
-    }
-  }     
-  dash(); 
-  printf("Enter size of input string:");
-  scanf("%d",&ip_size);
-  char * input=malloc(ip_size*sizeof(char));
+  do{
+  printf("\n1.Print transistion table \n2.Input string\n3.Exit\nEnter your choice:");
+  scanf("%d",&ch);
   dash();
-  printf("\nEnter the input string:\n");
-  scanf("%s",input);
-  int currentstate=initialState;
-  int pos=0;
-  int fp=0;
+  switch(ch)
+  {
+    case 1:
+        printf("\nTransistion Table:\nState\t");
+        for(i=0;i<noOfSym;i++)
+        printf("%c\t",symbols[i]);
+        for(i=0;i<noOfStates;i++)
+        {
+          printf("\n");
+          if(i==initialState)
+            printf("-->");
+          if(accState(accStates,i,noOfAcc))
+            printf("*");
+          printf("q%d\t",i);
+          for(j=0;j<noOfSym;j++)
+          {
+            printf("q%d\t",trans_tab[i][j]);
+          }
+        }     
+        break;
+    case 2: 
+        printf("Enter size of input string:");
+        scanf("%d",&ip_size);
+        char * input=malloc(ip_size*sizeof(char));
+        dash();
+        printf("\nEnter the input string:\n");
+        scanf("%s",input);
+        int currentstate=initialState;
+        int pos=0;
+        int fp=0;
+        dash();
+        while(1)
+        {
+          printf("q%d--->",currentstate);
+          pos=getIndex(symbols,*(input+fp));
+          if(pos!=-1)
+          {
+            currentstate=trans_tab[currentstate][pos];
+            fp+=1;
+          }
+          else
+          {
+            break;
+          }
+        }
+        if(fp==strlen(input)&&accState(accStates,currentstate,noOfAcc))
+        {
+          printf("Accepted.\n");
+        }
+        else
+        {
+          printf("Rejected.\n");
+        }
+        free(input);
+        break;
+      case 3:
+        exit(0);
+      default:
+        printf("\nInvalid choice.");
+  }
   dash();
-  while(1)
-  {
-    printf("q%d--->",currentstate);
-    pos=getIndex(symbols,*(input+fp));
-    if(pos!=-1)
-    {
-      currentstate=trans_tab[currentstate][pos];
-      fp+=1;
-    }
-    else
-    {
-      break;
-    }
-  }
-  if(fp==strlen(input)&&accState(accStates,currentstate,noOfAcc))
-  {
-    printf("Accepted.\n");
-  }
-  else
-  {
-    printf("Rejected.\n");
-  }    
+  }while(1);    
   free(trans_tab);
   free(symbols);
-  free(input);
   free(accStates);
   free(Q);
 }
